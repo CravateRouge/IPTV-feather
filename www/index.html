@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+   This file is part of IPTV-feather, a platform for IPTV content.
+   Copyright (C) 2020 Baptiste Crépin <baptiste.crepin@ntymail.com>
+
+    IPTV-feather is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    IPTV-feather is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with IPTV feather.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link rel="stylesheet" type="text/css" href="css/general.css">
+        <title>IPTV Player</title>
+    </head>
+    <body>
+        <link rel="stylesheet" href='css/tileGridView.css'>
+        <link rel="stylesheet" href='css/mediaView.css'>
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="toast.js"></script>
+        <script type="text/javascript" src="js/utils.js"></script>
+        <script type="text/javascript" src="js/Parser.js"></script>
+        <script type="text/javascript" src="js/Media.js"></script>
+        <script type="text/javascript" src="js/TileGrid.js"></script>
+        <script type="text/javascript" src="js/init.js"></script>
+
+        <div id="tileGridView">
+            <span id="thumbTpl" class="mediaThumb" >
+                <img src="" alt="N/A" class="thumbnail">
+                <h6 class="title"></h6>
+            </span>
+            <div>
+                <p>Click on one of the three categories (only Channels is fill with dumb content)</p>
+                <form id="addPlaylist">
+                    <label for="link">Add a playlist:</label> 
+                    <input name="link" type="text">
+                    <input type="submit" value="Go">
+                </form>
+                <span id="Channels">|Channels| </span><span id="Movies"> |Movies| </span><span id="TVshows"> |TV shows|</span>
+            </div>
+        </div>
+
+        <div id="mediaView" class="hide">
+            <div id="media">
+                    <div class="return">&#x21A9;</div>
+                    <span id="loader" class="hide loading spin"></span>
+                    <span id="percentage" class="hide loading">0%</span>
+                    <div id="infoBar" class="hide">
+                        <div id="progressContainer">
+                            <div id="progressBar">           
+                                <div id="progress"></div>
+                            </div>
+                        </div>
+                        <div id="info">
+                            <span id="playPause">
+                                <span id="play" class="hide">&#x25B6;</span>
+                                <span id="pause">&#x258E; &#x258E;</span>
+                            </span>
+                            <span id="mediaTitle"></span>
+                            <span id="mediaDescription"></span>
+                            <!-- TODO Reduce image size so it takes less time to load -->
+                            <img id="poster" src="" alt="N/A">
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </body>
+</html>

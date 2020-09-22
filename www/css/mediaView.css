@@ -1,0 +1,150 @@
+/*
+ * This file is part of IPTV-feather, a platform for IPTV content.
+ * Copyright (C) 2020 Baptiste Crépin <baptiste.crepin@ntymail.com>
+ *
+ * IPTV-feather is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *  IPTV-feather is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with IPTV feather.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
+.hide{
+	display: none;
+}
+
+#channelView{
+	height: 100%;
+}
+
+#media{
+	background-color: black;
+	height: 100%;
+	color:white;
+}
+
+#media>.return{
+	position: absolute;
+	display: inline-block;
+	z-index: 1;
+}
+.loading{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 1;
+	transform: translate(-50%,-50%);
+
+	font-size: 200%;
+}
+
+#loader{
+	border: 0.25em solid rgba(0,0,0,0);
+	border-top: 0.25em solid white;
+	border-radius: 50%;
+	height: 2em;	
+	width: 2em;
+}
+
+.spin{
+	animation:rotation 2s linear infinite;
+}
+
+@keyframes rotation{
+	from { transform: translate(-50%,-50%) rotate(0);}
+	to {transform: translate(-50%,-50%) rotate(360deg);}
+}
+
+#percentage{
+	font-family: arial black;
+}
+
+#infoBar{
+	position: absolute;
+	bottom: 0;
+	z-index: 1;
+	width: 100%;
+	height: 8%;
+}
+
+#infoBar.hide{
+	height: 0%;
+	display: initial;
+}
+
+#progressContainer{
+	position:absolute;
+	height:20%;
+	width:100%;
+	transform: translateY(-50%);
+}
+
+#progressContainer:hover, #progressContainer:focus{
+	transform: translateY(-50%) scaleY(2);
+}
+
+#progressBar{
+	position: absolute;
+	width:100%;
+	height: 20%;
+	top:50%;
+	transform: translateY(-50%);
+
+	background-color: #8080804f;
+}
+
+#progress{
+	height: 0%;
+	background-color: #2b498e;
+}
+
+@keyframes progressing{
+	from { width:0%; }
+	to   { width:100%; }
+  }
+
+#info{
+	box-sizing: border-box;
+	height: 90%;
+	padding: 10px;
+
+	font-size: 150%;
+}
+
+#playPause{
+	display: inline-block;
+	margin-right: 1%;
+
+	transition: .2s;
+}
+
+#playPause:hover, #playPause:focus{
+	transform: scale(1.5);
+}
+
+#mediaDescription{
+	display: inline-block;
+	position: relative;
+	height: 100%;
+	width: 80%;
+
+	font-size: 70%;
+	vertical-align: top;
+	text-align: center;
+	color:grey;
+
+	overflow-Y: scroll;
+	overflow-x: hidden;
+}
+
+#poster{
+	float: right;
+	max-height: 80%;
+}
