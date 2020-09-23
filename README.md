@@ -8,6 +8,12 @@ Instead of creating an empty project, use your local repo of IPTV-feather as a t
 `cordova create FeatherTest --template=<Your IPTV-Feather local repo>`
 ## TODO
 - Add a delete function for the playlists previously added
+- Add a multiple playlists option
+- Clean the DOM when a view is unused
+- Change MediaView display as ergonomic carousel for TV
+- Add a function to change channel from player view
+- Add a function to list channels from player view
+- Add a function to change language/subtitles on player view
 - Add a design and a logo
 - Add EPG support
 - Add regular updates of the registered playlists
