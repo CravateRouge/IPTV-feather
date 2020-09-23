@@ -68,8 +68,7 @@ function TileGrid(id, caller) {
         tileEltClone.id = obj.id;
         var img = tileEltClone.querySelector(".thumbnail");
         img.src = obj.thumbnail;
-        img.alt = obj.thumbnailAlt;
-        tileEltClone.querySelector(".title").textContent = obj.title;
+        tileEltClone.querySelector(".title").textContent = obj.name;
         tileEltClone.addEventListener("click", obj.activateView)
         this.view.appendChild(tileEltClone);
     }

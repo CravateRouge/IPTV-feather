@@ -146,9 +146,10 @@ function Media(parentObj, source, poster, name, description){
 }
 
 // TODO makes name and thumbnail optional
-function MediaContent(id, container, source, thumbnail, name) {
+function MediaContent(id, container, source, thumbnail) {
 	
 	this.id = container.id + id;
+	this.name = id;
 	this.container = container;
 	this.source = source;
 	this.media = null;
@@ -190,10 +191,11 @@ function MediaContent(id, container, source, thumbnail, name) {
 	}).bind(this);
 }
 
-function MediaContainer(name, container, thumbnail, type){
+function MediaContainer(id, container, thumbnail, type){
 
-	this.thumbnailAlt = name;
-	this.id = name;
+	this.thumbnailAlt = id;
+	this.id = id;
+	this.name = id;
 	this.type = type;
 
 	this.thumbnail = "";
