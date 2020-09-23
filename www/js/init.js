@@ -76,6 +76,7 @@ var app = {
             // Instantiates playlist adder
             var playlistForm = document.getElementById("addPlaylist");
             playlistForm.addEventListener("submit", function(e){
+                viewManager.switchView("menuLoader");
                 Parser(e.target[0].value);
                 e.preventDefault();
             });
