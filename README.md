@@ -1,8 +1,12 @@
 # IPTV-feather
-An application acting as a platform for IPTV streams made with Javascript to run on samsung smart TV with cordova
+An application acting as a platform for IPTV streams made with Javascript to run on Samsung SmartTV with cordova
 
+## Prepare and build on browser
+This application use the TOAST plugin made by Samsung to run a cordova app on a Samsung SmartTV. In order to test the app on a browser, you'll need to prepare the environment as described in the [Getting Started](https://github.com/Samsung/cordova-plugin-toast/wiki) section of the TOAST wiki.
+Instead of creating an empty project, use your local repo of IPTV-feather as a template to create a cordova project:
+
+`cordova create FeatherTest --template=<Your IPTV-Feather local repo>`
 ## TODO
-- Add a howto to test the code on a browser
 - Add a delete function for the playlists previously added
 - Add a design and a logo
 - Add EPG support
