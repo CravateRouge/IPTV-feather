@@ -29,7 +29,7 @@
         -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <link rel="stylesheet" type="text/css" href="css/general.css">
-        <title>IPTV Player</title>
+        <title>IPTV Feather</title>
     </head>
     <body>
         <link rel="stylesheet" href='css/tileGridView.css'>
@@ -43,19 +43,28 @@
         <script type="text/javascript" src="js/TileGrid.js"></script>
         <script type="text/javascript" src="js/init.js"></script>
 
-        <div id="tileGridView">
+        <div id="initView">
+            <img src="img/logoName.svg">
+        </div>
+
+        <div id="mediaMenu" class="hide">
+            <form id="addPlaylist" class="hide">
+                <label for="link">Add a playlist:</label> 
+                <input name="link" type="text">
+                <input type="submit" value="Go">
+            </form>
+            <div id="mediaMenuChoice" class="hide">
+                <span class="Channels">Channels</span><span class="Movies">Movies</span><span class="TVshows">TV shows</span>
+            </div>
+        </div>
+
+        <div id="tileGridView" class="hide">
             <span id="thumbTpl" class="mediaThumb" >
                 <img src="" alt="N/A" class="thumbnail">
                 <h6 class="title"></h6>
             </span>
-            <div>
-                <p>Click on one of the three categories</p>
-                <form id="addPlaylist">
-                    <label for="link">Add a playlist:</label> 
-                    <input name="link" type="text">
-                    <input type="submit" value="Go">
-                </form>
-                <span id="Channels">|Channels| </span><span id="Movies"> |Movies| </span><span id="TVshows"> |TV shows|</span>
+            <div id="mediaSubMenuChoice">
+                <span class="Channels">Channels</span><span class="Movies">Movies</span><span class="TVshows">TV shows</span>
             </div>
         </div>
 

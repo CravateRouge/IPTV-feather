@@ -20,11 +20,20 @@
 var DB = null;
 var ROOT_STORES = ["Channels", "Movies", "TVshows"];
 
-var INIT_VIEW = "tileGridView";
+var INIT_VIEW = "initView";
 
 var viewManager = {
         currentView: INIT_VIEW,
     
+        /**
+         * Hides the current view and shows the new one.
+         *
+         * Hides the current view and all parent tag and shows the new one put in parameter with all parent tags.
+         *
+         * @function
+         *
+         * @param {string}   viewToShow     The ID string of the tag to show.
+         */
         switchView: function (viewToShow){
             var node = document.getElementById(this.currentView);
             do{

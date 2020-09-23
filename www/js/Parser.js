@@ -30,12 +30,14 @@ function Parser(url){
         var obj = {};
         var objs = [];
         var match = reParam.exec(playlist);
+        var nextMatch;
 
         // TODO protect it against xss injections or other kind of injections
         // If no match was found the value is null so we hit the bottom of the playlist
         // Index 0 is entire match, 1 is first match from the right. Match order depending on open parenthesis
 
         while(match){
+            nextMatch = reParam.exec(playlist);
             if(match[2]){// Match id, name or logo
                 var param = match[2];
                 switch(param){
@@ -81,20 +83,25 @@ function Parser(url){
 
                 objs.push(obj);
 
-                for(var i = 0; i< objs.length; i++){
+                for(var i = 0; i < objs.length; i++){
                      // TODO Have a global DB variable
                     var request = DB.transaction(type, "readwrite").objectStore(type).put(objs[i]);
                     request.onerror = function(evt){
                         // TODO replace this error message with temporary non blocking popup dialog box
                         console.log("IndexedDB put error when trying to parse the playlist:\n"+ evt.target.error.message);
                     };
+
+                    if(nextMatch == null && i+1 == objs.length)
+                        request.onsuccess = function(){
+                            localStorage.setItem('isBdInstantiated', true);
+                            viewManager.switchView("mediaMenuChoice");
+                        };
                 }
 
                 obj = {};
                 objs = [];
             }
-
-            match = reParam.exec(playlist);
+            match = nextMatch;
         }
     }
     xhr.send();

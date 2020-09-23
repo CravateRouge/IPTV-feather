@@ -17,63 +17,6 @@
  */
 
  
-/* var tvKeyCode = [];
-
-function setKeyTable() {
-    console.log('[mediaSample] setKeyTable');
-    toast.inputdevice.getSupportedKeys(function(keys) {
-        for(var i = 0, len = keys.length; i < len; i++) {
-            tvKeyCode[keys[i].name] = keys[i].code;
-        }
-    });
-}
-
-function registerKeys() {
-    console.log('[mediaSample] registerKeys');
-    var usedKeys = [
-        'MediaPause',
-        'MediaPlay',
-        'MediaFastForward',
-        'MediaRewind',
-        'MediaStop',
-        'Enter'
-    ];
-
-    for (var i = 0; i < usedKeys.length; i++) {
-        try{
-            toast.inputdevice.registerKey(usedKeys[i], function() {}, function(err) {
-                console.log('Error: ' + err.message);
-            });
-        } catch(e){
-            console.log("failed to register " + usedKeys[i] + ": " + e);
-        }
-    }
-}
-
-function registerKeyHandler() {
-    window.addEventListener('keydown', function(e) {
-        switch(e.keyCode) {
-            case tvKeyCode.Return:
-                toast.application.exit();
-                break;
-
-            case tvKeyCode.MediaPause:
-                playOrPause();
-                break;
-
-            case tvKeyCode.MediaPlay:
-                playOrPause();
-                break;
-
-            case tvKeyCode.MediaFastForward:
-                break;
-
-            case tvKeyCode.MediaRewind:
-                break;
-        }
-    });
-} */
-
 var app = {
     // Application Constructor
     initialize: function() {
@@ -122,9 +65,12 @@ var app = {
 
             // Instantiates category views
             var media = null;
+            var menuTab;
             for(var i = 0; i<ROOT_STORES.length; i++){
                 media = new MediaContainer(ROOT_STORES[i],{id:"", activateView: function(){}}, null, ROOT_STORES[i]);
-                document.getElementById(ROOT_STORES[i]).addEventListener("click",media.activateView);
+                menuTab = document.getElementsByClassName(ROOT_STORES[i]);
+                for(var j=0; j < menuTab.length; j++)
+                    menuTab[j].addEventListener("click",media.activateView);
             }
 
             // Instantiates playlist adder
@@ -133,43 +79,12 @@ var app = {
                 Parser(e.target[0].value);
                 e.preventDefault();
             });
+
+            if(localStorage.getItem("isBdInstantiated"))
+                viewManager.switchView("mediaMenuChoice");
+            else
+                viewManager.switchView("addPlaylist");
         };
-
-        /*
-        var initDB = function(evt){
-            var db = evt.currentTarget.result;
-            var toUpdate = false;
-
-            for(var i = 0; i < ROOT_STORES.length; i++){
-                if(!db.objectStoreNames.contains(ROOT_STORES[i])){
-                    toUpdate = true;
-                    break;
-                }
-            }
-
-            if(!toUpdate){
-                dbHandler.getDB(dbHandler.putObjs(objects));
-            }
-            else{
-                var version = db.version;
-                db.close();
-    
-                var createStr = function(evt){
-                    var db = evt.currentTarget.result;      
-                    
-                    for(var i = 0; i < ROOT_STORES.length; i++)
-                        if(!db.objectStoreNames.contains(ROOT_STORES[i]))
-                            db.createObjectStore(ROOT_STORES[i], {keyPath: "id"});
-
-                    dbHandler.putObjs(objects);
-                };
-    
-                dbHandler.getDB(createStr, version);
-            }
-        };
-
-        dbHandler.getDB(initDB);
-        */
     },
 };
 
