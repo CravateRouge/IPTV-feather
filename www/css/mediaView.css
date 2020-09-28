@@ -15,10 +15,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with IPTV feather.  If not, see <https://www.gnu.org/licenses/>.
  */
- 
-.hide{
-	display: none;
-}
 
 #channelView{
 	height: 100%;
@@ -30,10 +26,10 @@
 	color:white;
 }
 
-#media>.return{
+#media > .return{
 	position: absolute;
-	display: inline-block;
 	z-index: 1;
+	margin-left: 1%;
 }
 
 .loading {
@@ -73,6 +69,7 @@
 	z-index: 1;
 	width: 100%;
 	height: 8%;
+	overflow: hidden;
 }
 
 #infoBar.hide{
@@ -81,9 +78,9 @@
 }
 
 #progressContainer{
-	position:absolute;
-	height:20%;
-	width:100%;
+	position: absolute;
+	height: 20%;
+	width: 100%;
 	transform: translateY(-50%);
 }
 
@@ -117,6 +114,7 @@
 	padding: 10px;
 
 	font-size: 150%;
+	text-align: left;
 }
 
 #playPause{
@@ -141,5 +139,5 @@
 
 #poster{
 	float: right;
-	max-height: 80%;
+	max-height: 100%;
 }

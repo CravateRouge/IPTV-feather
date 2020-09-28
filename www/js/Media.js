@@ -118,16 +118,23 @@ function Media(parentObj, source, poster, name, description){
 	document.getElementById("mediaTitle").textContent = this.name;
 	document.getElementById("mediaDescription").textContent = this.description;
 
-	// Shows the play bar when a key is pressed
+	// Shows the play bar and the return icon when a key is pressed
 	window.addEventListener('keydown', (function(){
-		var infoClasses = document.getElementById("infoBar").classList;
-		infoClasses.remove("hide");
+		var tagsName = ["infoBar", "mediaReturn"];
+
+		for(var i = 0; i < tagsName.length; i++)
+			document.getElementById(tagsName[i]).classList.remove("hide");
 
 		// If the bar is already displayed, it resets the timeout before hiding it
 		if(this.displayTimeout)
 			clearTimeout(this.displayTimeout);
 		
-		this.displayTimeout = setTimeout(function(){infoClasses.add("hide"); this.displayTimeout = null;}, 5000);	
+		this.displayTimeout = setTimeout(function(){
+			for(var i = 0; i < tagsName.length; i++)
+				document.getElementById(tagsName[i]).classList.add("hide");
+			this.displayTimeout = null;
+		}, 5000);	
+
 	}).bind(this));
 
 	// Goes back to the previousView

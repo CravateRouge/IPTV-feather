@@ -71,7 +71,7 @@
 
         <div id="mediaView" class="hide">
             <div id="media">
-                    <div class="return zoom">&#x21A9;</div>
+                    <div id="mediaReturn" class="return hide zoom">&#x21A9;</div>
                     <span id="loader" class="hide loading"></span>
                     <span id="percentage" class="hide loading">0%</span>
                     <div id="infoBar" class="hide">
@@ -88,7 +88,7 @@
                             <span id="mediaTitle"></span>
                             <span id="mediaDescription"></span>
                             <!-- TODO Reduce image size so it takes less time to load -->
-                            <img id="poster" src="" alt="N/A">
+                            <img id="poster" src="img/logoName.svg" onerror="this.src='img/logoName.svg'">
                         </div>
                     </div>
             </div>

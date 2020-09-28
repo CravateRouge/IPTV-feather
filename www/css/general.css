@@ -44,6 +44,10 @@ body {
 	transform: scale(1.5);
 }
 
+.hide{
+	display: none;
+}
+
 #mediaMenu {
     position: relative;
     top: 50%;
