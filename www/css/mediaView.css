@@ -122,12 +122,6 @@
 #playPause{
 	display: inline-block;
 	margin-right: 1%;
-
-	transition: .2s;
-}
-
-#playPause:hover, #playPause:focus{
-	transform: scale(1.5);
 }
 
 #mediaDescription{

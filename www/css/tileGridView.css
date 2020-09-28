@@ -29,14 +29,24 @@
     display: inline-block;
     width: 15%;
     height: 25%;
+    vertical-align: middle;
+    height: 30%;
 }
 
 .thumbnail {
-    height: 85%;
+    height: 80%;
     max-width: 99%;
+    border-radius: 3%;
 }
 
 .title{
     margin: 0.2%;
     font-size: 1.3rem;
+}
+#mediaSubMenuChoice span{
+    display: inline-block;
+}
+
+.subGridView{
+    height:90%;
 }

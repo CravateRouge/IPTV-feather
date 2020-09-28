@@ -35,9 +35,10 @@ function TileGrid(id, caller) {
 
     this.view = document.createElement("div");
     this.view.id = this.id+"TileGridView";
+    this.view.classList.add("subGridView");
 
     var returnHtml = document.createElement("div");
-    returnHtml.classList.add("return");
+    returnHtml.classList.add("return","zoom");
     returnHtml.innerHTML = "&#x21A9;";
     returnHtml.addEventListener("click", this.caller.container.activateView);
     this.view.appendChild(returnHtml);

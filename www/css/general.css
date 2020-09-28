@@ -36,6 +36,14 @@ body {
     text-align: center;
 }
 
+* {
+    transition: .2s;
+}
+
+.zoom:hover, .zoom:focus{
+	transform: scale(1.5);
+}
+
 #mediaMenu {
     position: relative;
     top: 50%;
@@ -45,6 +53,7 @@ body {
 
 #mediaMenuChoice > span{
     font-size: 7em;
+    display: inline-block;
 }
 
 #mediaMenuChoice > span, #tileGridView span {
@@ -57,8 +66,8 @@ body {
 
 #initView > img {
     background-color: white;
-    border-radius: 60px;
-    padding: 2%;
+    border-radius: 20px;
+    padding: 5%;
     width: 20%;
     position: absolute;
     top: 0;
@@ -67,3 +76,28 @@ body {
     left: 0;
     margin: auto;
 }
+
+.return {
+    text-align: left;
+    margin-left: 7%;
+    font-weight: bold;
+    font-size: 2em;
+    width:3%;
+}
+
+label {
+    display: block;
+    margin-bottom: 4%;
+}
+
+input[type=submit] {
+    background: no-repeat url("../img/add-white.svg");
+    border: 0;
+}
+
+input[type=text] {   
+    padding:0.8%; 
+    padding-right:3%;   
+    border:0;   
+    border-radius: 10px
+ }
