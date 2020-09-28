@@ -17,4 +17,5 @@ Instead of creating an empty project, use your local repo of IPTV-feather as a t
 - Add a design
 - Add EPG support
 - Add regular updates of the registered playlists
-- Add error message when a flux cannot be loaded or read
+- Add error messages when a stream cannot be loaded or read
+- Add a search bar for content
