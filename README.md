@@ -14,6 +14,7 @@ Instead of creating an empty project, use your local repo of IPTV-feather as a t
 - Add a function to change channel from player view
 - Add a function to list channels from player view
 - Add a function to change language/subtitles on player view
-- Add a design and a logo
+- Add a design
 - Add EPG support
 - Add regular updates of the registered playlists
+- Add error message when a flux cannot be loaded or read
