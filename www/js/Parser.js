@@ -17,15 +17,14 @@
  */
 
  
-function Parser(url){
+function Parser(newPl){
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url)
+    xhr.open("GET", newPl.url);
     xhr.onload = function(e){
         var playlist = e.target.responseText;
 
         var reParam = /(group-title|tvg-(\w+))="([^"]+)|(http:\S+)/g;
-        
 
         var obj = {};
         var objs = [];
@@ -64,7 +63,7 @@ function Parser(url){
                 var type = "Channels";
 
                 // Push the root category as an entry
-                objs.push({id: obj.category, category:"ROOT"});
+                objs.push({id: obj.category, category: newPl.id});
 
                 if(subMatch){
                     if(subMatch[0] == "movie")
@@ -93,8 +92,7 @@ function Parser(url){
 
                     if(nextMatch == null && i+1 == objs.length)
                         request.onsuccess = function(){
-                            localStorage.setItem('isBdInstantiated', true);
-                            viewManager.switchView("mediaMenuChoice");
+                            viewManager.printPlaylists();
                         };
                 }
 

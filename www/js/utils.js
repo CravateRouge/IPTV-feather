@@ -49,6 +49,32 @@ var viewManager = {
             }while(node != document.body);
 
             this.currentView = viewToShow;
+        },
+
+        printPlaylists: function(){
+            var playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+            var playlistEntry = document.getElementById("playlistTpl").cloneNode(true);
+            playlistEntry.classList.remove("hide");
+            playlistEntry.removeAttribute("id");
+
+            for(var i = 0; i < playlists.length; i++){
+                var item = playlistEntry.cloneNode(true);
+                var media = null;
+                for(var j = ROOT_STORES.length - 1 ; j > -1; j--){
+                    media = new MediaContainer("playlist_"+i,{id:"", activateView: function(){viewManager.switchView("menuPlaylist")}}, null, ROOT_STORES[j]);
+
+                    // FIXME remove previous listeners?
+                    document.querySelector("."+ROOT_STORES[j]).addEventListener("click",  media.activateView);
+
+                }
+                item.addEventListener("click", media.activateView);
+                var tmpUrl = document.createElement('a');
+                tmpUrl.href = playlists[i];
+                item.textContent = tmpUrl.hostname;
+                document.getElementById("menuPlaylist").append(item);
+            }
+
+            this.switchView("mediaMenu");
         }
 };
 

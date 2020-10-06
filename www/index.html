@@ -47,16 +47,20 @@
             <img src="img/logoName.svg">
         </div>
 
+        <div id="menuLoader" class="hide loading"></div>
+
         <div id="mediaMenu" class="hide">
-            <form id="addPlaylist" class="hide">
+            <span id="menuPlaylist">
+                <div id="playlistTpl" class="hide"></div>
+            </span>
+            <form id="addPlaylist">
                 <label for="link">Just add your playlist and enjoy!</label> 
-                <input name="link" type="text" placeholder="https://my-playlist.m3u"autofocus>
+                <input name="link" type="text" placeholder="https://my-playlist.m3u" autofocus>
                 <input class="addButton zoom" type="submit" value="">
             </form>
-            <span id="menuLoader" class="hide loading"></span>
-            <div id="mediaMenuChoice" class="hide">
+<!--             <div id="mediaMenuChoice" class="hide">
                 <span class="Channels zoom">Channels</span><span class="Movies zoom">Movies</span><span class="TVshows zoom">TV shows</span>
-            </div>
+            </div> -->
         </div>
 
         <div id="tileGridView" class="hide">

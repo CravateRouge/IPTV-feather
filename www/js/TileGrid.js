@@ -74,15 +74,11 @@ function TileGrid(id, caller) {
         this.view.appendChild(tileEltClone);
     }
 
+
     // Displays all the content of a container as tiles through a call to a db method to retrieve the content.
-
     var index = DB.transaction(this.caller.type).objectStore(this.caller.type).index("category");
-    var keyCat = "ROOT";
-    // If the caller is the root you display the root category else you display caller name category
-    if(this.caller.id != this.caller.type)
-        keyCat = this.caller.id;
 
-    index.openCursor(keyCat).onsuccess = (function(e){
+    index.openCursor(this.caller.id).onsuccess = (function(e){
         var cursor = e.target.result;
         if(cursor) {
             var data = cursor.value;
