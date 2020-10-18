@@ -34,7 +34,7 @@ function TileGrid(id, caller) {
     this.caller = caller;
 
     this.view = document.createElement("div");
-    this.view.id = this.id+"TileGridView";
+    this.view.id = "tileGridView_"+this.caller.type+"_"+this.id;
     this.view.classList.add("subGridView");
 
     var returnHtml = document.createElement("div");
@@ -61,7 +61,7 @@ function TileGrid(id, caller) {
         var obj = null;
 
         if(!source)
-            obj = new MediaContainer(id, this.caller, thumbnail, this.caller.type);
+            obj = new MediaContainer(id, this.caller, thumbnail, this.caller.type, this.caller.playlist);
         else
             obj = new MediaContent(id, this.caller, source, thumbnail);
             
@@ -74,15 +74,23 @@ function TileGrid(id, caller) {
         this.view.appendChild(tileEltClone);
     }
 
+    var keyCat = this.caller.id;
+    // We are at the root where the media container is the playlist
+    if(this.caller.id == this.caller.playlist)
+         keyCat = "plaYlIst_" + this.caller.id;
 
     // Displays all the content of a container as tiles through a call to a db method to retrieve the content.
     var index = DB.transaction(this.caller.type).objectStore(this.caller.type).index("category");
 
-    index.openCursor(this.caller.id).onsuccess = (function(e){
+    index.openCursor(keyCat).onsuccess = (function(e){
         var cursor = e.target.result;
         if(cursor) {
             var data = cursor.value;
-            this.printTiles(data.id, data.source, data.thumbnail);
+            if(data.playlist == this.caller.playlist){
+                var normId = data.id.slice(data.id.indexOf("_")+1);
+                this.printTiles(normId, data.source, data.thumbnail);
+
+            }
             cursor.continue();
         }
     }).bind(this);

@@ -47,23 +47,26 @@ function Parser(newPl){
                         param = "name";
                         break;
                     case "name":
+                        match[3] = newPl.id + "_" + match[3];
                         param = "id";
                 }
                 obj[param] = match[3] == "NULL" ? "" : match[3]; // In case value is set to NULL string...
             } 
 
             else if(match[3]) // Match category
-                obj.category = match[3];
+                obj.category = newPl.id+"_"+match[3];
 
             else if(match[4] && obj.id){ // Match source end of entry
                 var source = match[4];
                 obj.source = source;
+                obj.playlist = newPl.id;
 
                 var subMatch = /movie|serie/.exec(source);
                 var type = "Channels";
 
+                // FIXME add Id to each category
                 // Push the root category as an entry
-                objs.push({id: obj.category, category: newPl.id});
+                objs.push({id: newPl.id +"_"+obj.category, category:"plaYlIst_"+newPl.id, playlist:newPl.id});
 
                 if(subMatch){
                     if(subMatch[0] == "movie")
@@ -72,9 +75,10 @@ function Parser(newPl){
                         type = "TVshows";
 
                         var tvMatch = /(.+) (S\d{2}) E\d{2}/i.exec(obj.id);
-                        objs.push({id: tvMatch[1], thumbnail: obj.thumbnail, category: obj.category });
-                        var seasonName = tvMatch[1] + " " +tvMatch[2];
-                        objs.push({id: seasonName, category: tvMatch[1]});
+                        var tvShowName = newPl.id +"_"+tvMatch[1];
+                        objs.push({id: tvShowName, thumbnail: obj.thumbnail, category: obj.category, playlist: newPl.id });
+                        var seasonName = newPl.id +"_"+tvMatch[1] + " " +tvMatch[2];
+                        objs.push({id: seasonName, category: tvMatch[1], playlist: newPl.id});
                         obj.thumbnail = null;
                         obj.category = seasonName;
                     }
@@ -83,7 +87,6 @@ function Parser(newPl){
                 objs.push(obj);
 
                 for(var i = 0; i < objs.length; i++){
-                     // TODO Have a global DB variable
                     var request = DB.transaction(type, "readwrite").objectStore(type).put(objs[i]);
                     request.onerror = function(evt){
                         // TODO replace this error message with temporary non blocking popup dialog box

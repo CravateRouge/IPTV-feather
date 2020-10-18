@@ -198,12 +198,13 @@ function MediaContent(id, container, source, thumbnail) {
 	}).bind(this);
 }
 
-function MediaContainer(id, container, thumbnail, type){
+function MediaContainer(id, container, thumbnail, type, playlist){
 
 	this.thumbnailAlt = id;
 	this.id = id;
 	this.name = id;
 	this.type = type;
+	this.playlist = playlist;
 
 	this.thumbnail = "";
 	if(thumbnail)

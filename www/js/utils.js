@@ -51,26 +51,83 @@ var viewManager = {
             this.currentView = viewToShow;
         },
 
+        deletePlaylist: function(index_Pl){
+            // Prints loading when doing the operation
+            this.switchView("menuLoader");
+
+            // Removes pl from local storage
+            var playlists = JSON.parse(localStorage.getItem("playlists"));
+            delete playlists[index_Pl];
+            localStorage.setItem("playlists", JSON.stringify(playlists));
+
+            // Removes pl from indexedDB
+            for(var i = 0; i < ROOT_STORES.length; i++){
+                var objStr = DB.transaction(ROOT_STORES[i],"readwrite").objectStore(ROOT_STORES[i]);
+                var index = objStr.index("playlist");
+                
+                // Anonymous function closure to keep a different objStr for each asynchronous call
+                index.openKeyCursor(index_Pl).onsuccess = (function(){
+                        var innerObjStr = objStr;
+                        return function(e){
+                            var cursor = e.target.result;
+                            if(cursor){
+                                var request = innerObjStr.delete(cursor.primaryKey);
+                                request.onerror = function(evt){
+                                    // TODO replace this error message with temporary non blocking popup dialog box
+                                    console.log("IndexedDB deletion error when trying to delete a playlist:\n"+ evt.target.error.message);
+                                };
+                                cursor.continue();
+                            }
+                            // End of the deletion operation
+                            else
+                                viewManager.printPlaylists();
+                    };
+                })();
+            }
+        },
+
         printPlaylists: function(){
+            // Cleans previous menu entries
+            var prevEntries = document.getElementsByClassName("entryPl");
+
+            while(prevEntries.length > 0)
+                prevEntries[0].parentNode.removeChild(prevEntries[0]);
+
             var playlists = JSON.parse(localStorage.getItem("playlists")) || [];
             var playlistEntry = document.getElementById("playlistTpl").cloneNode(true);
-            playlistEntry.classList.remove("hide");
+            playlistEntry.classList = ["entryPl"];
             playlistEntry.removeAttribute("id");
 
             for(var i = 0; i < playlists.length; i++){
+                if(playlists[i] == null)
+                    continue;
+
                 var item = playlistEntry.cloneNode(true);
                 var media = null;
                 for(var j = ROOT_STORES.length - 1 ; j > -1; j--){
-                    media = new MediaContainer("playlist_"+i,{id:"", activateView: function(){viewManager.switchView("menuPlaylist")}}, null, ROOT_STORES[j]);
+                    // FIXME Recreates a new object linked to the playlist entry -> will duplicate DOM tileGridView in some use cases (adding a playlist, deleting one)
+                    // and those tiles will not be hidden because of duplicate IDs (only the first one will be hidden)
+                    // Must be corrected by cleaning the DOMwith a cleaner or by avoiding linking new object
+                    media = new MediaContainer(i,{id:"", activateView: function(){viewManager.switchView("mediaMenu")}}, null, ROOT_STORES[j], i);
 
                     // FIXME remove previous listeners?
                     document.querySelector("."+ROOT_STORES[j]).addEventListener("click",  media.activateView);
 
                 }
-                item.addEventListener("click", media.activateView);
+
+                var namePl = item.querySelector(".namePl");
+                //Binds the html elt to corresponding media
+                namePl.addEventListener("click", media.activateView);
+
+                // Adds the hostname of the URL as the name for the playlist entry
                 var tmpUrl = document.createElement('a');
                 tmpUrl.href = playlists[i];
-                item.textContent = tmpUrl.hostname;
+                namePl.textContent = tmpUrl.hostname;
+
+                item.querySelector(".delPl").addEventListener("click", (function(m){
+                    return function(){viewManager.deletePlaylist(m);};
+                })(i));
+
                 document.getElementById("menuPlaylist").append(item);
             }
 

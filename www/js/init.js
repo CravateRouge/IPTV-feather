@@ -56,6 +56,7 @@ var app = {
             for(var i = 0; i < ROOT_STORES.length; i++){
                 var objectStore = request.result.createObjectStore(ROOT_STORES[i], {keyPath: "id"});
                 objectStore.createIndex("category", "category", {unique: false});
+                objectStore.createIndex("playlist", "playlist", {unique: false});
             }
         };
         
@@ -63,14 +64,14 @@ var app = {
             DB = request.result;
 
             // Instantiates category views
-            var media = null;
+/*             var media = null;
             var menuTab;
             for(var i = 0; i < ROOT_STORES.length; i++){
                 media = new MediaContainer(ROOT_STORES[i],{id:"", activateView: function(){}}, null, ROOT_STORES[i]);
                 menuTab = document.getElementsByClassName(ROOT_STORES[i]);
                 for(var j=0; j < menuTab.length; j++)
                     menuTab[j].addEventListener("click",media.activateView);
-            }
+            } */
 
             // Instantiates playlist adding feature
             var playlistForm = document.getElementById("addPlaylist");
@@ -82,7 +83,7 @@ var app = {
 
                 var playlists = JSON.parse(localStorage.getItem("playlists")) || [];
 
-                Parser({id: "playlist_"+playlists.length, url: e.target[0].value});
+                Parser({id: playlists.length, url: e.target[0].value});
 
                 playlists.push(e.target[0].value);
                 localStorage.setItem("playlists", JSON.stringify(playlists));
