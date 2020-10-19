@@ -64,7 +64,6 @@ function Parser(newPl){
                 var subMatch = /movie|serie/.exec(source);
                 var type = "Channels";
 
-                // FIXME add Id to each category
                 // Push the root category as an entry
                 objs.push({id: newPl.id +"_"+obj.category, category:"plaYlIst_"+newPl.id, playlist:newPl.id});
 

@@ -26,15 +26,15 @@
  *
  * @global
  *
- * @param {string}   id           Type of tile to handle, used to open the correct objectStore.
+ * @param {string}   tileID           ID to assign to the div representing the tileGrid.
+ * @param {MediaContainer} caller   MediaContainer calling this function to be materialized in the DOM.
  */
-function TileGrid(id, caller) {
+function TileGrid(tileID, caller) {
 
-    this.id = id;
     this.caller = caller;
 
     this.view = document.createElement("div");
-    this.view.id = "tileGridView_"+this.caller.type+"_"+this.id;
+    this.view.id = tileID;
     this.view.classList.add("subGridView");
 
     var returnHtml = document.createElement("div");

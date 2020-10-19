@@ -214,9 +214,13 @@ function MediaContainer(id, container, thumbnail, type, playlist){
 	this.tileGrid = null;
 
 	this.activateView = (function(){
-		if(!this.tileGrid)
-			this.tileGrid = new TileGrid(this.id, this);
+		var tileID = "tileGridView_"+this.type+"_"+this.id;
 
-		viewManager.switchView(this.tileGrid.view.id);
+		// Does not duplicate a tileGrid if an entry already exists in the DOM
+		this.tileGrid = document.getElementById(tileID);
+		if(!this.tileGrid)
+			this.tileGrid = new TileGrid(tileID, this);
+
+		viewManager.switchView(tileID);
 	}).bind(this);
 }

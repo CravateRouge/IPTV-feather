@@ -103,21 +103,28 @@ var viewManager = {
                     continue;
 
                 var item = playlistEntry.cloneNode(true);
-                var media = null;
-                for(var j = ROOT_STORES.length - 1 ; j > -1; j--){
-                    // FIXME Recreates a new object linked to the playlist entry -> will duplicate DOM tileGridView in some use cases (adding a playlist, deleting one)
-                    // and those tiles will not be hidden because of duplicate IDs (only the first one will be hidden)
-                    // Must be corrected by cleaning the DOMwith a cleaner or by avoiding linking new object
-                    media = new MediaContainer(i,{id:"", activateView: function(){viewManager.switchView("mediaMenu")}}, null, ROOT_STORES[j], i);
-
-                    // FIXME remove previous listeners?
-                    document.querySelector("."+ROOT_STORES[j]).addEventListener("click",  media.activateView);
-
-                }
 
                 var namePl = item.querySelector(".namePl");
-                //Binds the html elt to corresponding media
-                namePl.addEventListener("click", media.activateView);
+
+                namePl.addEventListener("click", (function(){
+                    var idPl = i;
+                    return function(){ 
+                        var media = null;
+                        for(var j = ROOT_STORES.length - 1 ; j > -1; j--){
+                            media = new MediaContainer(idPl,{id:"", activateView: function(){viewManager.switchView("mediaMenu");}}, null, ROOT_STORES[j], idPl);
+
+                            // TODO Check if preventDefault() stop other eventListeners put previously
+                            document.querySelector("."+ROOT_STORES[j]).addEventListener("click",  (function(){ 
+                                var innerMedia = media; 
+                                return function(e){
+                                    e.preventDefault();
+                                    innerMedia.activateView();
+                                };
+                            })());
+                        }
+                        media.activateView(); 
+                    };
+                })());
 
                 // Adds the hostname of the URL as the name for the playlist entry
                 var tmpUrl = document.createElement('a');
@@ -125,8 +132,9 @@ var viewManager = {
                 namePl.textContent = tmpUrl.hostname;
 
                 item.querySelector(".delPl").addEventListener("click", (function(m){
-                    return function(){viewManager.deletePlaylist(m);};
-                })(i));
+                    var idPl = i;
+                    return function(){viewManager.deletePlaylist(idPl);};
+                })());
 
                 document.getElementById("menuPlaylist").append(item);
             }
