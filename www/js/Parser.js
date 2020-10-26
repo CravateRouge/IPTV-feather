@@ -37,20 +37,24 @@ function Parser(newPl){
 
         while(match){
             nextMatch = reParam.exec(playlist);
-            if(match[2]){// Match id, name or logo
+            if(match[2]){// Match id or logo
                 var param = match[2];
                 switch(param){
                     case "logo":
                         param = "thumbnail";
                         break;
-                    case "id":
+                    /* case "id":
                         param = "name";
-                        break;
+                        break; */
                     case "name":
                         match[3] = newPl.id + "_" + match[3];
                         param = "id";
+                        break;
+                    default:
+                        param = null;
                 }
-                obj[param] = match[3] == "NULL" ? "" : match[3]; // In case value is set to NULL string...
+                if(param)
+                    obj[param] = match[3] == "NULL" ? "" : match[3]; // In case value is set to NULL string...
             } 
 
             else if(match[3]) // Match category

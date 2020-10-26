@@ -156,7 +156,7 @@ function Media(parentObj, source, poster, name, description){
 function MediaContent(id, container, source, thumbnail) {
 	
 	this.id = container.id + id;
-	this.name = id;
+	this.name = typeof id == "number"? id : id.slice(id.indexOf("_")+1);
 	this.container = container;
 	this.source = source;
 	this.media = null;
@@ -164,9 +164,6 @@ function MediaContent(id, container, source, thumbnail) {
 	this.thumbnail = "";
 	if(thumbnail)
 		this.thumbnail = thumbnail;
-
-	// TODO replace ID by name only when name is non null
-	this.thumbnailAlt = id;
 
 	// TODO extract title from current program for channel but use id or name for movies/tv show
 	this.title = id;
@@ -200,9 +197,8 @@ function MediaContent(id, container, source, thumbnail) {
 
 function MediaContainer(id, container, thumbnail, type, playlist){
 
-	this.thumbnailAlt = id;
 	this.id = id;
-	this.name = id;
+	this.name = typeof id == "number"? id :id.slice(id.indexOf("_")+1);
 	this.type = type;
 	this.playlist = playlist;
 
