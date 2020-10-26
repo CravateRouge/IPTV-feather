@@ -53,7 +53,7 @@ button {
 	transform: scale(1.5);
 }
 
-.hide{
+#mediaMenu.hide ,.hide{
 	display: none;
 }
 
