@@ -36,6 +36,15 @@ body {
     text-align: center;
 }
 
+button {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+}
+
 * {
     transition: .2s;
 }
@@ -49,18 +58,40 @@ body {
 }
 
 #mediaMenu {
+    font-weight: bold;
+    width: 60%;
+    margin: auto;
+    display: table;
+    table-layout: fixed;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    font-weight: bold;
 }
 
-#mediaMenuChoice > span{
-    font-size: 7em;
-    display: inline-block;
+#menuPlaylist {
+    background-color: #1c1c1c;
+    padding: 1%;
+    border: solid #373737;
+    overflow: auto;
+    display: table-cell;
+    vertical-align: middle;
 }
 
-#mediaMenuChoice > span, #tileGridView span {
+#menuPlaylist > :nth-child(2n) {
+    background-color: #716e6e;
+}
+
+.delPl {
+    background: no-repeat url("../img/delete-white.svg");
+    color: transparent;
+}
+
+#addPlaylist {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#tileGridView button {
     background-color: #485461;
     background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
     border-radius: 10px;

@@ -49,16 +49,17 @@
 
         <div id="menuLoader" class="hide loading"></div>
 
+        <!-- TODO faire le design pour mediaMenu -->
         <div id="mediaMenu" class="hide">
             <span id="menuPlaylist">
                 <div id="playlistTpl" class="hide">
-                    <span class="namePl"></span>
-                    <button class="delPl">Delete</button>
+                    <button type="button" class="namePl"></button>
+                    <button type="button" class="delPl">D</button>
                 </div>
             </span>
             <form id="addPlaylist">
                 <label for="link">Just add your playlist and enjoy!</label> 
-                <input name="link" type="text" placeholder="https://my-playlist.m3u" autofocus>
+                <input name="link" type="text" placeholder="https://my-playlist.m3u">
                 <input class="addButton zoom" type="submit" value="">
             </form>
 <!--             <div id="mediaMenuChoice" class="hide">
@@ -67,18 +68,18 @@
         </div>
 
         <div id="tileGridView" class="hide">
-            <span id="thumbTpl" class="mediaThumb zoom" >
+            <button id="thumbTpl" class="mediaThumb zoom" >
                 <img src="img/logoName.svg" class="thumbnail" onerror="this.src='img/logoName.svg'">
                 <h6 class="title"></h6>
-            </span>
+            </button>
             <div id="mediaSubMenuChoice" class="">
-                <span class="Channels zoom">Channels</span><span class="Movies zoom">Movies</span><span class="TVshows zoom">TV shows</span>
+                <button type="button" class="Channels zoom">Channels</button><button type="button" class="Movies zoom">Movies</button><button type="button" class="TVshows zoom">TV shows</button>
             </div>
         </div>
 
         <div id="mediaView" class="hide">
             <div id="media">
-                    <div id="mediaReturn" class="return hide zoom">&#x21A9;</div>
+                    <button type="button" id="mediaReturn" class="return hide zoom">&#x21A9;</button>
                     <span id="loader" class="hide loading"></span>
                     <span id="percentage" class="hide loading">0%</span>
                     <div id="infoBar" class="hide">
@@ -89,8 +90,8 @@
                         </div>
                         <div id="info">
                             <span id="playPause" class="zoom">
-                                <span id="play" class="hide">&#x25B6;</span>
-                                <span id="pause">&#x258E; &#x258E;</span>
+                                <button type="button" id="play" class="hide">&#x25B6;</button>
+                                <button type="button" id="pause">&#x258E; &#x258E;</button>
                             </span>
                             <span id="mediaTitle"></span>
                             <span id="mediaDescription"></span>
