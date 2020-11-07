@@ -53,52 +53,6 @@ button {
 	transform: scale(1.5);
 }
 
-#mediaMenu.hide ,.hide{
-	display: none;
-}
-
-#mediaMenu {
-    font-weight: bold;
-    width: 60%;
-    margin: auto;
-    display: table;
-    table-layout: fixed;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-#menuPlaylist {
-    background-color: #1c1c1c;
-    padding: 1%;
-    border: solid #373737;
-    overflow: auto;
-    display: table-cell;
-    vertical-align: middle;
-}
-
-#menuPlaylist > :nth-child(2n) {
-    background-color: #716e6e;
-}
-
-.delPl {
-    background: no-repeat url("../img/delete-white.svg");
-    color: transparent;
-}
-
-#addPlaylist {
-    display: table-cell;
-    vertical-align: middle;
-}
-
-#tileGridView button {
-    background-color: #485461;
-    background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
-    border-radius: 10px;
-    margin: 0.5%;
-    padding: 0.5%;
-}
-
 #initView > img {
     background-color: white;
     border-radius: 20px;
@@ -119,20 +73,3 @@ button {
     font-size: 2em;
     width:3%;
 }
-
-label {
-    display: block;
-    margin-bottom: 4%;
-}
-
-input[type=submit] {
-    background: no-repeat url("../img/add-white.svg");
-    border: 0;
-}
-
-input[type=text] {   
-    padding:0.8%; 
-    padding-right:3%;   
-    border:0;   
-    border-radius: 10px
- }

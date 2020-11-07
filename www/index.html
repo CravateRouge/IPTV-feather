@@ -32,15 +32,16 @@
         <title>IPTV Feather</title>
     </head>
     <body>
+        <link rel="stylesheet" href='css/menuView.css'>
         <link rel="stylesheet" href='css/tileGridView.css'>
         <link rel="stylesheet" href='css/mediaView.css'>
-
+ 
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="toast.js"></script>
-        <script type="text/javascript" src="js/utils.js"></script>
+        <script type="text/javascript" src="js/view.js"></script>
         <script type="text/javascript" src="js/Parser.js"></script>
-        <script type="text/javascript" src="js/Media.js"></script>
-        <script type="text/javascript" src="js/TileGrid.js"></script>
+        <script type="text/javascript" src="js/media.js"></script>
+        <script type="text/javascript" src="js/controller.js"></script>
         <script type="text/javascript" src="js/init.js"></script>
 
         <div id="initView">
@@ -49,37 +50,30 @@
 
         <div id="menuLoader" class="hide loading"></div>
 
-        <!-- TODO faire le design pour mediaMenu -->
-        <div id="mediaMenu" class="hide">
-            <span id="menuPlaylist">
-                <div id="playlistTpl" class="hide">
-                    <button type="button" class="namePl"></button>
-                    <button type="button" class="delPl">D</button>
-                </div>
-            </span>
-            <form id="addPlaylist">
-                <label for="link">Just add your playlist and enjoy!</label> 
-                <input name="link" type="text" placeholder="https://my-playlist.m3u">
-                <input class="addButton zoom" type="submit" value="">
-            </form>
-<!--             <div id="mediaMenuChoice" class="hide">
-                <span class="Channels zoom">Channels</span><span class="Movies zoom">Movies</span><span class="TVshows zoom">TV shows</span>
-            </div> -->
-        </div>
+        <table id="menuView" class="hide">
+            <tbody>
+                <tr>
+                </tr>
+                <tr>
+                </tr>
+            </tbody>
+        </table>
 
         <div id="tileGridView" class="hide">
-            <button id="thumbTpl" class="mediaThumb zoom" >
-                <img src="img/logoName.svg" class="thumbnail" onerror="this.src='img/logoName.svg'">
-                <h6 class="title"></h6>
-            </button>
-            <div id="mediaSubMenuChoice" class="">
-                <button type="button" class="Channels zoom">Channels</button><button type="button" class="Movies zoom">Movies</button><button type="button" class="TVshows zoom">TV shows</button>
+                <button id="thumbTpl" class="mediaThumb zoom hide" >
+                    <img src="img/logoName.svg" class="thumbnail" onerror="this.src='img/logoName.svg'">
+                    <h6 class="title"></h6>
+                </button>
+            <div id="stores">
             </div>
+            <button type="button" class="return zoom" onclick="tileGridManager.goBack()">&#x21A9;</button>
+            <button id="Prev" class="switchGrid" onclick="viewManager.printTileGrid('prev');">Prev</button>
+            <button id="Next" class="switchGrid" onclick="viewManager.printTileGrid('next');">Next</button>
         </div>
 
         <div id="mediaView" class="hide">
             <div id="media">
-                    <button type="button" id="mediaReturn" class="return hide zoom">&#x21A9;</button>
+                    <button type="button" id="mediaReturn" class="return hide zoom" onclick="playerManager.goBack()">&#x21A9;</button>
                     <span id="loader" class="hide loading"></span>
                     <span id="percentage" class="hide loading">0%</span>
                     <div id="infoBar" class="hide">
@@ -95,7 +89,6 @@
                             </span>
                             <span id="mediaTitle"></span>
                             <span id="mediaDescription"></span>
-                            <!-- TODO Reduce image size so it takes less time to load -->
                             <img id="poster" src="img/logoName.svg" onerror="this.src='img/logoName.svg'">
                         </div>
                     </div>

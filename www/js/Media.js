@@ -16,35 +16,121 @@
  *  along with IPTV feather.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- 
-function Media(parentObj, source, poster, name, description){
+ var playlistManager = {
+	deletePlaylist: function(e){
+		var index_Pl = e.target.getAttribute("playlistIndex");
+		// Prints loading when doing the operation
+		viewManager.switchView("menuLoader");
 
-	this.parentObj = parentObj;
-	this.source = source;
-	this.name = name;
-	this.poster = poster;
-	this.description = description;
+		// Removes pl from local storage
+		var playlists = JSON.parse(localStorage.getItem("playlists"));
+		delete playlists[index_Pl];
+		localStorage.setItem("playlists", JSON.stringify(playlists));
 
-	this.player = toast.Media.getInstance();
-	this.player.open(this.source);
+		// Removes pl from indexedDB
+		for(var i = 0; i < ROOT_STORES.length; i++){
+			var objStr = DB.transaction(ROOT_STORES[i],"readwrite").objectStore(ROOT_STORES[i]);
+			var index = objStr.index("playlist");
+			
+			// Anonymous function closure to keep a different objStr for each asynchronous call
+			index.openKeyCursor(index_Pl).onsuccess = (function(){
+					var indexStore = i;
+					var innerObjStr = objStr;
+					return function(e){
+						var cursor = e.target.result;
+						if(cursor){
+							var request = innerObjStr.delete(cursor.primaryKey);
+							request.onerror = function(evt){
+								// TODO replace this error message with temporary non blocking popup dialog box
+								console.log("IndexedDB deletion error when trying to delete a playlist:\n"+ evt.target.error.message);
+							};
+							cursor.continue();
+						}
+						// End of the deletion operation
+						else if (indexStore == ROOT_STORES.length -1)
+							playlistManager.printPlaylists();
+				};
+			})();
+		}
+	},
+	printPlaylists: function(){
+		// Cleans previous menu entries
+		var rows = document.getElementById("menuView").tBodies[0].rows;
+		var playlistRow = rows[0];
+		var optionRow = rows[1];
+		for(var i=0; i < rows.length; i++){
+			while(rows[i].firstChild)
+				rows[i].removeChild(rows[i].firstChild);
+		}
 
-	var playerContainer = this.player.getContainerElement();
+		var playlists = JSON.parse(localStorage.getItem("playlists")) || [];
 
-	// Adds the element only if the player isn't already added in the DOM
-	if(!playerContainer.parentElement){
-		playerContainer.style.position = 'fixed';
-		var fullResolution = ['0%', '0%', '100%', '100%'];
-		/* playerContainer.style.left = fullResolution[0];
-		playerContainer.style.top = fullResolution[1]; */
-		playerContainer.style.width = fullResolution[2];
-		playerContainer.style.height = fullResolution[3];
-		document.getElementById("media").appendChild(playerContainer);
+		for(var i = 0; i < playlists.length; i++){
+			if(playlists[i] == null)
+				continue;
+
+
+			var nameCell = document.createElement("td");
+			var nameButton = document.createElement("button");
+			// Adds the hostname of the URL as the name for the playlist entry
+			var tmpUrl = document.createElement('a');
+			tmpUrl.href = playlists[i];
+			nameButton.textContent = tmpUrl.hostname;
+			nameButton.setAttribute("playlistIndex",i);
+			nameButton.addEventListener("click", function(e){ 
+					var idPl = e.target.getAttribute("playlistIndex");
+					viewManager.switchView("tileGridView");
+					tileGridManager.initGrid({id: idPl, playlist:idPl, type:ROOT_STORES[0]});
+			});     
+			nameButton.className = "namePl";
+
+			nameCell.appendChild(nameButton);
+			playlistRow.appendChild(nameCell);
+
+			var optionCell = document.createElement("td");
+			var optionButton = document.createElement("button");
+			optionButton.className = "delPl";
+			optionButton.textContent = "D";
+			optionButton.setAttribute("playlistIndex",i);
+			optionCell.appendChild(optionButton);
+			optionRow.appendChild(optionCell);
+			optionButton.addEventListener("click",this.deletePlaylist);
+		}
+
+		this.addButtonInit();
+		viewManager.switchView("menuView");
+		document.querySelector("td button").focus();
+	},
+	addButtonInit: function (){
+		var addCell = document.createElement("td");
+		var addButton = document.createElement("button");
+		addButton.id = "addPlButton";
+		addButton.textContent = "+";
+		addButton.addEventListener("click", function(e){
+			var urlExample = "http://localhost:8000/example.m3u";
+			var urlPl = prompt("Just add your playlist and enjoy!\nYou can use a url shortener like bit.ly to make the typing easier.", urlExample);
+			if(urlPl ==null || urlPl==urlExample)
+				return;
+
+			viewManager.switchView("menuLoader");
+
+			var playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+
+			Parser({id: playlists.length, url: urlPl});
+
+			playlists.push(urlPl);
+			localStorage.setItem("playlists", JSON.stringify(playlists));
+
+		});
+		addCell.appendChild(addButton);
+		document.getElementById("menuView").tBodies[0].rows[0].appendChild(addCell);
 	}
-
-	this.player.syncVideoRect(); //for supporting 2013's sectv-orsay
-
-	
-	this.eventHandler = (function(evt) {
+ };
+ 
+var playerManager = {
+	instancePlayer: null,
+	getPlayer: function(){return this.instancePlayer?this.instancePlayer:this.initPlayer();},
+	eventHandler: function(evt) {
 		switch(evt.type){
 			// Change the Play/Pause button depending on the state of the this.player
 			// Also pause or relaunch the progress bar
@@ -98,125 +184,159 @@ function Media(parentObj, source, poster, name, description){
 			case 'ENDED':
 				console.log('Media is ended');
 		}
-	}).bind(this);
-	
-	this.player.setListener({
-		onevent: this.eventHandler,
-		onerror: function(err){
-			// TODO: Handle errors to restart automatically the player and be verbose on the problem (network, IPTV link...)
-			console.error('MediaError is occured: ' + JSON.stringify(err));
-		}
-	});
-
-	this.player.play();
-	// You don't have to call setScreenSaver Method. It is configurated by toast.avplay.	
-
-	this.displayTimeout = null;
-	this.playerState = true;
-
-	document.getElementById("poster").src = this.poster;
-	document.getElementById("mediaTitle").textContent = this.name;
-	document.getElementById("mediaDescription").textContent = this.description;
-
-	// Shows the play bar and the return icon when a key is pressed
-	window.addEventListener('keydown', (function(){
-		var tagsName = ["infoBar", "mediaReturn"];
-
-		for(var i = 0; i < tagsName.length; i++)
-			document.getElementById(tagsName[i]).classList.remove("hide");
-
-		// If the bar is already displayed, it resets the timeout before hiding it
-		if(this.displayTimeout)
-			clearTimeout(this.displayTimeout);
-		
-		this.displayTimeout = setTimeout(function(){
-			for(var i = 0; i < tagsName.length; i++)
-				document.getElementById(tagsName[i]).classList.add("hide");
-			this.displayTimeout = null;
-		}, 5000);	
-
-	}).bind(this));
-
-	// Goes back to the previousView
-	// TODO clean when view change and activate when this view is activated
-	//window.addEventListener("Return", parentObj.previousView);
-	document.querySelector("#media>.return").addEventListener("click", parentObj.previousView);
-
-	// Pauses and plays the player when the playPause button is clicked
-	document.getElementById("playPause").addEventListener("click", (function() {
-		if(this.playerState)
-			this.player.pause();
-		else
-			this.player.play();
-		this.playerState = !this.playerState;
-	}).bind(this));
-}
-
-// TODO makes name and thumbnail optional
-function MediaContent(id, container, source, thumbnail) {
-	
-	this.id = container.id + id;
-	this.name = typeof id == "number"? id : id.slice(id.indexOf("_")+1);
-	this.container = container;
-	this.source = source;
-	this.media = null;
-
-	this.thumbnail = "";
-	if(thumbnail)
-		this.thumbnail = thumbnail;
-
-	// TODO extract title from current program for channel but use id or name for movies/tv show
-	this.title = id;
-/* 	this.getTitle = function(){
-		// TODO extract it from indexeddb
-		return "La petite sorcière";
-	}; */
-
-	this.getDescription = function(){
-		// TODO same that above
-		return "C'est l'histoire d'une petite sorcière qui courait dans l'herbe";
-	}
-
-	this.activateView = (function(){
-		// Media is created only when the channel view is activated and not in the channel list view
-		if(!this.media)
-			this.media = new Media(this, this.source, this.thumbnail, this.title, this.getDescription());
-		else{
-			this.media.player.open(this.source);
-			this.media.player.play();
-		}
-
+	},
+	displayTimeout: null,
+	playerState: false,
+	play: function(playerInfo){
 		viewManager.switchView("mediaView");
-	}).bind(this);
 
-	this.previousView = (function(){
-		this.media.player.stop();
-		this.container.activateView();
-	}).bind(this);
-}
+		this.getPlayer().open(playerInfo.source);
+		this.getPlayer().play();
 
-function MediaContainer(id, container, thumbnail, type, playlist){
+		document.getElementById("poster").src = playerInfo.thumbnail;
+		document.getElementById("mediaTitle").textContent = playerInfo.id;
+		document.getElementById("mediaDescription").textContent = playerInfo.description;
 
-	this.id = id;
-	this.name = typeof id == "number"? id :id.slice(id.indexOf("_")+1);
-	this.type = type;
-	this.playlist = playlist;
+		this.playerState = true;
 
-	this.thumbnail = "";
-	if(thumbnail)
-		this.thumbnail = thumbnail;
+		// Shows the play bar and the return icon when a key is pressed
+		window.addEventListener('keydown', function(){
+			var tagsName = ["infoBar", "mediaReturn"];
 
-	this.container = container;
-	this.tileGrid = null;
+			for(var i = 0; i < tagsName.length; i++)
+				document.getElementById(tagsName[i]).classList.remove("hide");
 
-	this.activateView = (function(){
-		var tileID = "tileGridView_"+this.type+"_"+this.id;
+			// If the bar is already displayed, it resets the timeout before hiding it
+			if(playerManager.displayTimeout)
+				clearTimeout(playerManager.displayTimeout);
+			
+				playerManager.displayTimeout = setTimeout(function(){
+					for(var i = 0; i < tagsName.length; i++)
+						document.getElementById(tagsName[i]).classList.add("hide");
+					playerManager.displayTimeout = null;
+				}, 5000);	
+		});
 
-		// Does not duplicate a tileGrid if an entry already exists in the DOM
-		this.tileGrid = document.getElementById(tileID);
-		if(!this.tileGrid)
-			this.tileGrid = new TileGrid(tileID, this);
+		// Pauses and plays the player when the playPause button is clicked
+		document.getElementById("playPause").addEventListener("click", (function() {
+		if(this.playerState)
+			this.getPlayer().pause();
+		else
+			this.getPlayer().play();
+		this.playerState = !this.playerState;
+		}).bind(this));
+	},
+	initPlayer: function(){
+		var player = toast.Media.getInstance();
+		var playerContainer = player.getContainerElement();
 
-		viewManager.switchView(tileID);
-	}).bind(this);
-}
+		playerContainer.style.position = 'fixed';
+		var fullResolution = ['0%', '0%', '100%', '100%'];
+		/* playerContainer.style.left = fullResolution[0];
+		playerContainer.style.top = fullResolution[1]; */
+		playerContainer.style.width = fullResolution[2];
+		playerContainer.style.height = fullResolution[3];
+		document.getElementById("media").appendChild(playerContainer);
+
+		player.syncVideoRect();
+		
+		player.setListener({
+			onevent: this.eventHandler,
+			onerror: function(err){
+				// TODO: Handle errors to restart automatically the player and be verbose on the problem (network, IPTV link...)
+				console.error('MediaError is occured: ' + JSON.stringify(err));
+			}
+		});
+		return player;
+	},
+	goBack: function(){
+		this.getPlayer().stop();
+		viewManager.switchView("tileGridView");
+	}
+};
+
+var tileGridManager = {
+	currentMediaTheme: null,
+    iterateDB : function(){
+        var index = DB.transaction(this.currentMediaTheme.type).objectStore(this.currentMediaTheme.type).index("category");
+		var keyCat = this.currentMediaTheme.id;
+		
+		if(this.currentMediaTheme.id == this.currentMediaTheme.playlist)
+			keyCat = "plaYlIst_"+this.currentMediaTheme.id;
+
+        index.openCursor(keyCat).onsuccess = (function(e){
+            var cursor = e.target.result;
+            if(!cursor){
+				viewManager.indexGrid = 0;
+				return viewManager.printTileGrid();
+			}
+            var data = cursor.value;              
+			viewManager.addTileToGridTab(this.prepareTile(data));
+			cursor.continue();
+        }).bind(this);
+	},
+	storeButtons: null,
+	changeStore: function(e){
+		var newId = tileGridManager.currentMediaTheme.playlist;
+		tileGridManager.initGrid({
+			id: newId,
+			playlist: newId,
+			type: e.target.getAttribute("store")
+		});
+	},
+	setStoreButtons: function (){
+		var storeElt = document.getElementById("stores");
+		for (var i = 0; i < ROOT_STORES.length; i++) {
+			var store = document.createElement("button");
+			store.setAttribute("store",ROOT_STORES[i]);
+			store.addEventListener("click", tileGridManager.changeStore);
+			store.textContent = ROOT_STORES[i] == "TvShows"? "TV shows" : ROOT_STORES[i];
+			storeElt.appendChild(store);		
+		}
+		return storeElt;
+	},
+    initGrid: function(currentMediaTheme){
+		if(!this.storeButtons)
+			this.storeButtons = this.setStoreButtons();
+		this.currentMediaTheme = currentMediaTheme;
+		viewManager.flushGridTab();
+        this.iterateDB();
+    },
+    prepareTile: function(data){
+		data.type = this.currentMediaTheme.type;
+        var showContent;
+        if(data.source)
+            showContent = function(e){playerManager.play(data);};
+        else
+            showContent = function(e){tileGridManager.initGrid(data);};
+        return {
+            id: data.id,
+            thumbnail: data.thumbnail,
+            showContent: showContent
+        };
+	},
+	goBack: function(){
+		var obj = this.currentMediaTheme;
+		// We are at the root where the media container is the playlist
+		if(obj.id == obj.playlist)
+			return viewManager.switchView("menuView");
+		
+		var indexId = obj.category.indexOf("plaYlIst_");
+		if(indexId > -1){
+			var slicedCat = obj.category.slice(indexId + 9);
+			return tileGridManager.initGrid({id: slicedCat, playlist: slicedCat, type: obj.type });
+		}
+
+		var objStr = DB.transaction(obj.type).objectStore(obj.type);
+		var result = objStr.get(obj.category)
+		result.onsuccess = function(e){
+			var newMediaTheme = e.target.result;
+			newMediaTheme.type = tileGridManager.currentMediaTheme.type;
+			tileGridManager.initGrid(newMediaTheme);
+		};
+		result.onerror = function(evt){
+			// TODO replace this error message with temporary non blocking popup dialog box
+			console.log("IndexedDB failed to get container from category:\n"+ evt.target.error.message);
+		};
+	}
+};

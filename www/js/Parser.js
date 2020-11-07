@@ -20,7 +20,7 @@
 function Parser(newPl){
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", newPl.url);
+    xhr.open("GET", newPl.url); // TODO handle errors and go back to menuView if error and correct missing protcol http or https
     xhr.onload = function(e){
         var playlist = e.target.responseText;
 
@@ -30,8 +30,8 @@ function Parser(newPl){
         var objs = [];
         var match = reParam.exec(playlist);
         var nextMatch;
+        var currID = 0;
 
-        // TODO protect it against xss injections or other kind of injections
         // If no match was found the value is null so we hit the bottom of the playlist
         // Index 0 is entire match, 1 is first match from the right. Match order depending on open parenthesis
 
@@ -69,7 +69,7 @@ function Parser(newPl){
                 var type = "Channels";
 
                 // Push the root category as an entry
-                objs.push({id: newPl.id +"_"+obj.category, category:"plaYlIst_"+newPl.id, playlist:newPl.id});
+                objs.push({id: obj.category, category:"plaYlIst_"+newPl.id, playlist:newPl.id});
 
                 if(subMatch){
                     if(subMatch[0] == "movie")
@@ -78,13 +78,16 @@ function Parser(newPl){
                         type = "TVshows";
 
                         var tvMatch = /(.+) (S\d{2}) E\d{2}/i.exec(obj.id);
-                        var tvShowName = newPl.id +"_"+tvMatch[1];
-                        objs.push({id: tvShowName, thumbnail: obj.thumbnail, category: obj.category, playlist: newPl.id });
-                        var seasonName = newPl.id +"_"+tvMatch[1] + " " +tvMatch[2];
+                        var tvShowName = tvMatch[1];
+                        objs.push({id: tvShowName, thumbnail: obj.thumbnail, category: obj.category, playlist: newPl.id }); //TODO one image per episode, one per season (first episode), one per tv show (first episode first season)
+                        var seasonName = tvMatch[1] + " " +tvMatch[2];
                         objs.push({id: seasonName, category: tvMatch[1], playlist: newPl.id});
                         obj.thumbnail = null;
                         obj.category = seasonName;
                     }
+                } else{ // If the parsed line is a FINAL channel (not a container) a channelID is linked to it
+                    obj.channelID = currID;
+                    currID ++;
                 }
 
                 objs.push(obj);
@@ -96,9 +99,9 @@ function Parser(newPl){
                         console.log("IndexedDB put error when trying to parse the playlist:\n"+ evt.target.error.message);
                     };
 
-                    if(nextMatch == null && i+1 == objs.length)
+                    if(nextMatch == null && i == objs.length - 1)
                         request.onsuccess = function(){
-                            viewManager.printPlaylists();
+                            playlistManager.printPlaylists();
                         };
                 }
 

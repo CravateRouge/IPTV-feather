@@ -43,10 +43,18 @@
     margin: 0.2%;
     font-size: 1.3rem;
 }
-#mediaSubMenuChoice button {
+#stores button {
     display: inline-block;
 }
 
 .subGridView{
     height:90%;
+}
+
+#tileGridView button {
+    background-color: #485461;
+    background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
+    border-radius: 10px;
+    margin: 0.5%;
+    padding: 0.5%;
 }
