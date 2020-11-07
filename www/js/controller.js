@@ -15,10 +15,10 @@ var keyManager = {
     moveFocus: function(direction){
         switch(direction){
             case "Left":
-                switchCell("nextSibling","firstChild")
+                switchCell("previousSibling","lastChild")
                 break;
             case "Right":
-                switchCell("previousSibling", "lastChild");
+                switchCell("nextSibling", "firstChild");
                 break;
             case "Up":
                 switchRow("previousSibling", "lastChild");
@@ -51,13 +51,13 @@ var keyManager = {
             var elt = document.activeElement;
             while((elt = elt.parentNode) && !(elt.tagName == "td"));
             if(!elt){
-                console.log("The active element is not in a cell.");
+                document.querySelector("#"+viewManager.currentView+" td button").focus();
                 return;
             }
             var cnt = elt.cellIndex;
             while((elt = elt.parentNode) && !(elt.tagName == "tr"));
             if(!elt){
-                console.log("The active element is not in a row.");
+                document.querySelector("#"+viewManager.currentView+" td button").focus();
                 return;
             }
             var focusElt = null;
