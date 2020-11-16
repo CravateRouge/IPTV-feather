@@ -26,12 +26,6 @@
 	color:white;
 }
 
-#media > .return{
-	position: absolute;
-	z-index: 1;
-	margin-left: 1%;
-}
-
 .loading {
 	position: absolute;
 	left: 50%;

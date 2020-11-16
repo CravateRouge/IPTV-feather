@@ -60,20 +60,20 @@
         </table>
 
         <div id="tileGridView" class="hide">
-                <button id="thumbTpl" class="mediaThumb zoom hide" >
+                <button id="thumbTpl" class="mediaThumb hide" >
                     <img src="img/logoName.svg" class="thumbnail" onerror="this.src='img/logoName.svg'">
                     <h6 class="title"></h6>
                 </button>
             <div id="stores">
             </div>
-            <button type="button" class="return zoom" onclick="tileGridManager.goBack()">&#x21A9;</button>
-            <button id="Prev" class="switchGrid" onclick="viewManager.printTileGrid('prev');">Prev</button>
-            <button id="Next" class="switchGrid" onclick="viewManager.printTileGrid('next');">Next</button>
+            <button type="button" class="return" onclick="tileGridManager.goBack()">&#x21A9;</button>
+            <button id="prev" class="switchGrid" onclick="viewManager.printTileGrid('prev');">P</button>
+            <button id="next" class="switchGrid" onclick="viewManager.printTileGrid('next');">N</button>
         </div>
 
         <div id="mediaView" class="hide">
             <div id="media">
-                    <button type="button" id="mediaReturn" class="return hide zoom" onclick="playerManager.goBack()">&#x21A9;</button>
+                    <button type="button" id="mediaReturn" class="return hide" onclick="playerManager.goBack()">&#x21A9;</button>
                     <span id="loader" class="hide loading"></span>
                     <span id="percentage" class="hide loading">0%</span>
                     <div id="infoBar" class="hide">
@@ -83,7 +83,7 @@
                             </div>
                         </div>
                         <div id="info">
-                            <span id="playPause" class="zoom">
+                            <span id="playPause">
                                 <button type="button" id="play" class="hide">&#x25B6;</button>
                                 <button type="button" id="pause">&#x258E; &#x258E;</button>
                             </span>

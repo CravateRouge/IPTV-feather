@@ -111,6 +111,7 @@ function initKeyTable() {
     // return tvKeyCode;
 
     window.addEventListener("keydown", function(e){
+        e.preventDefault();
         var keyName = tvKeyCode[e.keyCode];
 
         if(!keyName)

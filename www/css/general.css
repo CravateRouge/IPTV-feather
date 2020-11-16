@@ -49,10 +49,6 @@ button {
     transition: .2s;
 }
 
-.zoom:hover, .zoom:focus{
-	transform: scale(1.5);
-}
-
 #initView > img {
     background-color: white;
     border-radius: 20px;
@@ -67,9 +63,16 @@ button {
 }
 
 .return {
-    text-align: left;
-    margin-left: 7%;
     font-weight: bold;
     font-size: 2em;
     width:3%;
+    position: absolute;
+    z-index: 1;
+    margin-left: 1%;
+    top: 0;
+    left: 0;
 }
+
+button:focus {
+    border: 0.3em solid white;
+  }

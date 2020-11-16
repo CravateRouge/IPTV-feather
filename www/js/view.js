@@ -47,11 +47,14 @@ var viewManager = {
         },
         cleanTileGrid: function (){ 
             var tileTable = document.createElement("table");
+            tileTable.style = "display: inline-table; height:90%; width:90%; vertical-align: middle; table-layout:fixed;";
             var tileGrid = document.createElement("tbody");
+            tileGrid.style = "height:100%;";
             for (var i = 0; i < 3; i++) { // TODO rearrange numbers of rows (i) and columns (i) with the screen size
                 var row = document.createElement("tr");
                 for (var j = 0; j < 4; j++) {
                     var cell = document.createElement("td");
+                    cell.style = "height:30%;";
                     row.appendChild(cell);
                 }
                 tileGrid.appendChild(row);    
@@ -59,7 +62,7 @@ var viewManager = {
             if(this.currentTileGrid)
                 this.currentTileGrid.parentNode.parentNode.removeChild(this.currentTileGrid.parentNode); // TODO erase too old tileGrids and reuse old tileGrids
             tileTable.appendChild(tileGrid);
-            document.getElementById("tileGridView").appendChild(tileTable);
+            document.getElementById("tileGridView").insertBefore(tileTable,document.getElementById("next"));
             this.currentTileGrid = tileGrid;
         }, 
         addTileToGridTab: function(tileContent){
